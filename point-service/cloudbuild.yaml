@@ -1,0 +1,39 @@
+steps:
+  # build the container image
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "gcr.io/${PROJECT_ID}/point-service", "."]
+
+    # push the container image to Container Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/${PROJECT_ID}/point-service"]
+
+    # Deploy container image to Cloud Run
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      [
+        "run",
+        "deploy",
+        "point-service",
+        "--image",
+        "gcr.io/${PROJECT_ID}/point-service",
+        "--region",
+        "${_REGION}",
+        "--platform",
+        "managed",
+        "--memory",
+        "2G",
+        # 外部のアプリケーションが叩けるように認証不要としているが、要件に合わせる
+        "--allow-unauthenticated"
+      ]
+
+images:
+  - gcr.io/${PROJECT_ID}/point-service
+
+# 基本的にデフォルトのリージョンはasia-northeast1（東京）とする。（要件によっては他にする）
+substitutions:
+  _REGION: asia-northeast1
+
+options:
+  machineType: "N1_HIGHCPU_8"
+  substitution_option: 'ALLOW_LOOSE'
