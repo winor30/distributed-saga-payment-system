@@ -3,22 +3,28 @@ import { TicketHistory } from 'src/domain';
 import { Attributes, PaymentEvent } from 'src/domain/event';
 
 const TOPIC_NAME = 'distributed-payment-system-topic';
-const GRANTED_TICKET_EVENT = 'granted-ticket';
 
 export class PubSubClient {
-  constructor(private readonly pubsub: PubSub) { }
+  constructor(private readonly pubsub: PubSub) {}
 
-  publishGrantTicket = async (receivedData: PaymentEvent, history: TicketHistory) => {
+  publishEvent = async (receivedData: PaymentEvent, history: TicketHistory, eventType: Attributes['event_type']) => {
     const topic = this.pubsub.topic(TOPIC_NAME);
+    const event = this.mergeHistory(receivedData, history);
 
-    const event: PaymentEvent = {
-      ...receivedData,
-      ticket: history,
-    };
-    console.log(`receivedData, ${JSON.stringify(receivedData)}`)
     const attributes: Attributes = {
-      event_type: GRANTED_TICKET_EVENT,
-    }
+      event_type: eventType,
+    };
     return topic.publishJSON(event, attributes);
   };
+
+  private mergeHistory = (receivedData: PaymentEvent, history: TicketHistory): PaymentEvent => ({
+    ...receivedData,
+    ticket: {
+      userId: history.userId,
+      historyId: history.historyId,
+      ticketId: history.ticketId,
+      amount: history.amount,
+      grantedAt: history.grantedAt,
+    },
+  });
 }

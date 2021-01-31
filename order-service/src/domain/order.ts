@@ -1,4 +1,3 @@
-
 export interface OrderRepository {
   get: (orderId: string) => Promise<Order | null>;
   create: (order: Order) => Promise<Order>;
@@ -34,12 +33,12 @@ export class Order {
   }
 
   complete = () => {
-    return this.updateStatus('complete')
-  }
+    return this.updateStatus('complete');
+  };
 
   cancel = () => {
-    return this.updateStatus('cancel')
-  }
+    return this.updateStatus('cancel');
+  };
 
   private updateStatus = (status: Status) => {
     return new Order({
@@ -49,6 +48,6 @@ export class Order {
       ticketId: this.ticketId,
       purchasedAt: this.purchasedAt,
       status: status,
-    })
-  }
+    });
+  };
 }

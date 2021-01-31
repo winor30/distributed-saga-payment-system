@@ -35,7 +35,7 @@ export class PointConsumer {
 
       // 履歴の更新
       const createdAt = dayjs().unix();
-      const history = new PointHistory({ historyId, createdAt, value });
+      const history = new PointHistory({ historyId, createdAt, value, userId });
       const createdHistory = await historyRepository.create(history);
       return { history: createdHistory, account: updatedAccount };
     });

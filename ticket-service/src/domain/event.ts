@@ -11,6 +11,7 @@ export type PaymentEvent = {
     status: Status;
   };
   point?: {
+    userId: string;
     historyId: string;
     value: number;
     createdAt: number;
@@ -24,7 +25,13 @@ export type PaymentEvent = {
   };
 };
 
-type EventType = 'started-order' | 'consumed-point' | 'granted-ticket';
+type EventType =
+  | 'started-order'
+  | 'consumed-point'
+  | 'granted-ticket'
+  | 'refunded-point'
+  | 'stopped-order'
+  | 'canceled-ticket';
 export type Attributes = {
   event_type: EventType;
 };

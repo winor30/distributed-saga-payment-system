@@ -7,7 +7,7 @@ const ORDER_SERVICE_SUBSCRIPTION = 'order-subscription';
 const STARTED_ORDER_EVENT = 'started-order';
 
 export class PubSubClient {
-  constructor(private readonly pubsub: PubSub) { }
+  constructor(private readonly pubsub: PubSub) {}
 
   publishOrder = async (order: Order) => {
     const topic = this.pubsub.topic(TOPIC_NAME);
@@ -24,13 +24,13 @@ export class PubSubClient {
       },
     };
     const attributes: Attributes = {
-      event_type: STARTED_ORDER_EVENT
-    }
+      event_type: STARTED_ORDER_EVENT,
+    };
     return topic.publishJSON(event, attributes);
   };
 
   subscribe = async (order: Order) => {
-    console.log('start subscribe', JSON.stringify(order))
+    console.log('start subscribe', JSON.stringify(order));
     const subscription = this.pubsub.topic(TOPIC_NAME).subscription(ORDER_SERVICE_SUBSCRIPTION);
 
     return new Promise<{ id: string }>((resolve, reject) => {
@@ -39,7 +39,7 @@ export class PubSubClient {
           return;
         }
         const msgData = typeof message.data === 'string' ? message.data : message.data.toString();
-        console.log('data', msgData)
+        console.log('data', msgData);
         let event: PaymentEvent | null = null;
         try {
           event = JSON.parse(msgData);
@@ -53,11 +53,11 @@ export class PubSubClient {
         }
         const orderId = event.id;
         if (order.orderId !== orderId) {
-          console.log(`order.orderId: ${order.orderId}, orderId: ${orderId}`)
+          console.log(`order.orderId: ${order.orderId}, orderId: ${orderId}`);
           return;
         }
 
-        if (message.ack) message.ack()
+        if (message.ack) message.ack();
         subscription.removeListener('message', onMessage);
         resolve({ id: orderId });
       };

@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 import { FinishEventSubscriber } from 'src/service/finishOrderEventSubscriber';
 import { PurchaseTicketOrderer } from 'src/service/purchaseTicketOrderer';
 import { StartEventPublisher } from 'src/service/startOrderEventPublisher';
-import HttpError from 'src/util/error';
+import { HttpError } from 'src/util/error';
 
 export default class OrderHandler {
   constructor(
@@ -11,7 +11,10 @@ export default class OrderHandler {
     private readonly subscriber: FinishEventSubscriber
   ) {}
 
-  purchaseTicket: RequestHandler<any, any, { userId?: string; price?: number; ticketId?: string }> = async (req, res) => {
+  purchaseTicket: RequestHandler<any, any, { userId?: string; price?: number; ticketId?: string }> = async (
+    req,
+    res
+  ) => {
     const { userId, price, ticketId } = req.body;
     if (!userId || !price || !ticketId) {
       const errorMsg = `invalid required parameter. userId: ${userId}, price: ${price}, ticketId: ${ticketId}`;

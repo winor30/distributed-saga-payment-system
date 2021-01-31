@@ -6,7 +6,8 @@ import { PubSubClient } from './client/pubsub';
 import { PaymentEvent } from './domain/event';
 import TicketHandler from './handler/ticket';
 import { FirestoreTransactionManager } from './repository/transactional/transaction';
-import { ConsumedEventPublisher } from './service/consumedEventPublisher';
+import { GrantedEventPublisher } from './service/grantedEventPublisher';
+import { TicketCanceller } from './service/ticketCanceller';
 import { TicketGranter } from './service/ticketGranter';
 import { errorHandler, logErrors, pubsubHandlerWrapper } from './util/handler';
 
@@ -17,13 +18,21 @@ app.use(bodyParser.json());
 const firestoreTransactionManager = new FirestoreTransactionManager(new firestore.Firestore());
 
 const granter = new TicketGranter(firestoreTransactionManager);
-const publisher = new ConsumedEventPublisher(new PubSubClient(new PubSub()))
-const ticketHandler = new TicketHandler(granter, publisher)
+const canceller = new TicketCanceller(firestoreTransactionManager);
+const publisher = new GrantedEventPublisher(new PubSubClient(new PubSub()))
+const ticketHandler = new TicketHandler(granter, canceller, publisher)
 
 app.post(
   '/grant',
   pubsubHandlerWrapper<any, any, PaymentEvent>(async (req, res, next) => {
     await ticketHandler.grantTicket(req, res, next);
+  })
+);
+
+app.post(
+  '/cancel',
+  pubsubHandlerWrapper<any, any, PaymentEvent>(async (req, res, next) => {
+    await ticketHandler.cancelTicket(req, res, next);
   })
 );
 

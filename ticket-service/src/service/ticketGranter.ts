@@ -3,7 +3,7 @@ import { Ticket, TicketHistory, TicketInventory, TicketRepository } from 'src/do
 import { TransactionManager } from 'src/domain/transaction';
 
 export class TicketGranter {
-  constructor(private readonly transactionManager: TransactionManager) { }
+  constructor(private readonly transactionManager: TransactionManager) {}
 
   grant = async (
     orderId: string,
@@ -16,7 +16,6 @@ export class TicketGranter {
       const inventoryRepository = tx.getTicketInventoryRepository();
       const historyRepository = tx.getTicketHistoryRepository();
 
-
       // ticket inventory取得
       const inventory = await inventoryRepository.get(ticketId);
       if (!inventory) {
@@ -26,7 +25,7 @@ export class TicketGranter {
 
       const currentHistory = await historyRepository.get(orderId);
       const currentTicket = await ticketRepository.get(userId, ticketId);
-      console.log('already granted ticket')
+      console.log('already granted ticket');
       if (currentHistory && currentTicket) {
         return { ticket: currentTicket, inventory, history: currentHistory };
       }
@@ -68,7 +67,7 @@ export class TicketGranter {
     count: number,
     ticket: Ticket | null,
     userId: string,
-    ticketId: string,
+    ticketId: string
   ) => {
     if (ticket) {
       const incrementedTicket = ticket.incrementCount(count);
@@ -77,5 +76,5 @@ export class TicketGranter {
       const createdTicket = new Ticket({ userId, ticketId, count });
       return ticketRepository.create(createdTicket);
     }
-  }
+  };
 }

@@ -30,6 +30,16 @@ export class TicketInventory {
     return new TicketInventory({ ticketId, price, stock });
   };
 
+  incrementStock = (count: number): TicketInventory => {
+    const stock = this.stock + count;
+    if (stock < 0) {
+      throw new Error('stock is less than zero');
+    }
+    const ticketId = this.ticketId;
+    const price = this.price;
+    return new TicketInventory({ ticketId, price, stock });
+  };
+
   verifyOrder = (totalPrice: number, count: number): boolean => {
     return totalPrice === this.totalPrice(count);
   };

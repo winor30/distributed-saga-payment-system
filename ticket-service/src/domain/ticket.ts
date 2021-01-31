@@ -24,6 +24,16 @@ export class Ticket {
   incrementCount = (value: number) => {
     const userId = this.userId;
     const ticketId = this.ticketId;
+    const count = this.count + value;
+    if (count < 0) {
+      throw new Error("ticket's count is less than zero");
+    }
+    return new Ticket({ userId, ticketId, count });
+  };
+
+  decrementCount = (value: number) => {
+    const userId = this.userId;
+    const ticketId = this.ticketId;
     const count = this.count - value;
     if (count < 0) {
       throw new Error("ticket's count is less than zero");

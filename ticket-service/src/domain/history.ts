@@ -1,3 +1,6 @@
+import dayjs from 'dayjs';
+import generateRandomString from 'src/util/random';
+
 export interface TicketHistoryRepository {
   create: (history: TicketHistory) => Promise<TicketHistory>;
   get: (historyId: string) => Promise<TicketHistory | null>;
@@ -25,4 +28,16 @@ export class TicketHistory {
     this.amount = amount;
     this.grantedAt = grantedAt;
   }
+
+  cancel = () => {
+    const amount = -this.amount;
+    const historyId = generateRandomString();
+    return new TicketHistory({
+      historyId,
+      amount,
+      userId: this.userId,
+      ticketId: this.ticketId,
+      grantedAt: dayjs().unix(),
+    });
+  };
 }

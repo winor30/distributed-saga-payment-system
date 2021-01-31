@@ -1,5 +1,5 @@
 import { ErrorRequestHandler, RequestHandler } from 'express';
-import HttpError from './error';
+import { HttpError } from './error';
 
 export const asyncWrapper = <T extends { [key: string]: any }, ResBody = any, ReqBody = any>(fn: RequestHandler<T>) => {
   const handler: RequestHandler<T, ResBody, ReqBody> = (req, res, next) => {

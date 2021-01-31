@@ -1,5 +1,5 @@
 import { ErrorRequestHandler, RequestHandler } from 'express';
-import HttpError from './error';
+import { HttpError } from './error';
 
 export const asyncWrapper = <T extends { [key: string]: any }, ResBody = any, ReqBody = any>(fn: RequestHandler<T>) => {
   const handler: RequestHandler<T, ResBody, ReqBody> = (req, res, next) => {
@@ -12,7 +12,9 @@ export const asyncWrapper = <T extends { [key: string]: any }, ResBody = any, Re
   return handler;
 };
 
-export const pubsubHandlerWrapper = <T extends { [key: string]: any }, ResBody = any, ReqBody = any>(fn: RequestHandler<T>) => {
+export const pubsubHandlerWrapper = <T extends { [key: string]: any }, ResBody = any, ReqBody = any>(
+  fn: RequestHandler<T>
+) => {
   const handler: RequestHandler<T, ResBody, { message?: { data?: string } }> = (req, res, next) => {
     if (!req.body) {
       const msg = 'no Pub/Sub message received';

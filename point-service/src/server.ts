@@ -6,8 +6,9 @@ import { PubSubClient } from './client/pubsub';
 import { PaymentEvent } from './domain/event';
 import PointHandler from './handler/point';
 import { FirestoreTransactionManager } from './repository/transactional/transaction';
-import { ConsumedEventPublisher } from './service/consumedEventPublisher';
 import { PointConsumer } from './service/pointConsumer';
+import { PointEventPublisher } from './service/pointEventPublisher';
+import { PointRefunder } from './service/pointRefunder';
 import { errorHandler, logErrors, pubsubHandlerWrapper } from './util/handler';
 
 const app = express();
@@ -17,8 +18,9 @@ app.use(bodyParser.json());
 const firestoreTransactionManager = new FirestoreTransactionManager(new firestore.Firestore());
 
 const pointConsumer = new PointConsumer(firestoreTransactionManager);
-const publisher = new ConsumedEventPublisher(new PubSubClient(new PubSub()))
-const pointHandler = new PointHandler(pointConsumer, publisher)
+const pointRefunder = new PointRefunder(firestoreTransactionManager);
+const publisher = new PointEventPublisher(new PubSubClient(new PubSub()))
+const pointHandler = new PointHandler(pointConsumer, pointRefunder, publisher)
 
 app.post(
   '/consume',
