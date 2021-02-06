@@ -1,0 +1,15 @@
+@startuml software architecutre
+
+package domain {
+  interface Repository
+  class Domain
+}
+
+Handler --* Service
+Service --* Repository
+Service --* Domain
+Repository --* Domain
+
+Repository <|-- FirestoreRepository
+
+@enduml
