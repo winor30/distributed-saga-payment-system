@@ -25,8 +25,8 @@ export class TicketGranter {
 
       const currentHistory = await historyRepository.get(orderId);
       const currentTicket = await ticketRepository.get(userId, ticketId);
-      console.log('already granted ticket');
       if (currentHistory && currentTicket) {
+        console.log('already granted ticket');
         return { ticket: currentTicket, inventory, history: currentHistory };
       }
 

@@ -21,7 +21,7 @@ export default class TicketHandler {
     }
 
     const grantedResult = await this.granter
-      .grant(id, order.userId, order.ticketId, point.value)
+      .grant(id, order.userId, order.ticketId, -point.value)
       .catch((err: Error) => err);
     if (grantedResult instanceof Error) {
       const errorMsg = `failed grant ticket. reason: ${grantedResult.message}`;

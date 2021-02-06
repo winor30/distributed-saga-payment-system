@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { PointAccount, PointHistory } from 'src/domain';
 import { TransactionManager } from 'src/domain/transaction';
 
@@ -34,8 +33,7 @@ export class PointConsumer {
       const updatedAccount = await accountRepository.update(targetAccount);
 
       // 履歴の更新
-      const createdAt = dayjs().unix();
-      const history = new PointHistory({ historyId, createdAt, value, userId });
+      const history = PointHistory.consume({ historyId, value, userId });
       const createdHistory = await historyRepository.create(history);
       return { history: createdHistory, account: updatedAccount };
     });
