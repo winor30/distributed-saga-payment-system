@@ -29,6 +29,13 @@ app.post(
   })
 );
 
+app.post(
+  '/refund',
+  pubsubHandlerWrapper<any, any, PaymentEvent>(async (req, res, next) => {
+    await pointHandler.refundPoint(req, res, next);
+  })
+);
+
 // エラーがスローされたときに、出力＋エラーレスポンス返す
 app.use(logErrors);
 app.use(errorHandler);

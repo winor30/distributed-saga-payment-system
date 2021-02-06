@@ -5,9 +5,9 @@ import { Attributes, PaymentEvent } from 'src/domain/event';
 const TOPIC_NAME = 'distributed-payment-system-topic';
 
 export class PubSubClient {
-  constructor(private readonly pubsub: PubSub) {}
+  constructor(private readonly pubsub: PubSub) { }
 
-  publishEvent = async (receivedData: PaymentEvent, history: PointHistory, eventType: Attributes['event_type']) => {
+  publishEvent = async (eventType: Attributes['event_type'], receivedData: PaymentEvent, history?: PointHistory) => {
     const topic = this.pubsub.topic(TOPIC_NAME);
     const event = this.mergeHistory(receivedData, history);
 
@@ -17,7 +17,7 @@ export class PubSubClient {
     return topic.publishJSON(event, attributes);
   };
 
-  private mergeHistory = (receivedData: PaymentEvent, history: PointHistory): PaymentEvent => ({
+  private mergeHistory = (receivedData: PaymentEvent, history?: PointHistory): PaymentEvent => (history ? {
     ...receivedData,
     point: {
       userId: history.userId,
@@ -25,5 +25,5 @@ export class PubSubClient {
       value: history.value,
       createdAt: history.createdAt,
     },
-  });
+  } : receivedData);
 }

@@ -26,6 +26,7 @@ export default class TicketHandler {
     if (grantedResult instanceof Error) {
       const errorMsg = `failed grant ticket. reason: ${grantedResult.message}`;
       console.error(grantedResult);
+      await this.publisher.publishFailed(eventData);
       throw new HttpError(errorMsg, 500);
     }
 

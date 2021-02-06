@@ -4,12 +4,11 @@ import { Attributes, PaymentEvent } from 'src/domain/event';
 
 const TOPIC_NAME = 'distributed-payment-system-topic';
 const ORDER_SERVICE_SUBSCRIPTION = 'order-subscription';
-const STARTED_ORDER_EVENT = 'started-order';
 
 export class PubSubClient {
   constructor(private readonly pubsub: PubSub) {}
 
-  publishOrder = async (order: Order) => {
+  publishEvent = async (eventType: Attributes['event_type'], order: Order) => {
     const topic = this.pubsub.topic(TOPIC_NAME);
 
     const event: PaymentEvent = {
@@ -24,7 +23,7 @@ export class PubSubClient {
       },
     };
     const attributes: Attributes = {
-      event_type: STARTED_ORDER_EVENT,
+      event_type: eventType,
     };
     return topic.publishJSON(event, attributes);
   };

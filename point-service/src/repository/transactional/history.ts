@@ -5,6 +5,7 @@ import { HISTORIES_COL_NAME, ROOT_COL_NAME, VERSION_DOC_NAME } from './collectio
 type FirestorePointHistory = {
   historyId: string;
   value: number;
+  userId: string;
   createdAt: number;
 }
 
@@ -24,6 +25,7 @@ export class TransactionalPointHistoryRepository implements PointHistoryReposito
   create = async (history: PointHistory) => {
     const ref = this.docRef(history.historyId);
     const data: FirestorePointHistory = {
+      userId: history.userId,
       historyId: history.historyId,
       value: history.value,
       createdAt: history.createdAt

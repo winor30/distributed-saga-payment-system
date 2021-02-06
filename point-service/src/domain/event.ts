@@ -27,11 +27,14 @@ export type PaymentEvent = {
 
 type EventType =
   | 'started-order'
-  | 'consumed-point'
-  | 'granted-ticket'
-  | 'refunded-point'
   | 'stopped-order'
-  | 'canceled-ticket';
+  | 'consumed-point'
+  | 'refunded-point'
+  | 'failed-point'
+  | 'granted-ticket'
+  | 'canceled-ticket'
+  | 'failed-ticket';
+
 export type Attributes = {
   event_type: EventType;
 };

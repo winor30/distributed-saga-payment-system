@@ -30,11 +30,17 @@ export default class OrderHandler {
 
     const order = orderedResult.order;
 
-    await this.publisher.publish(order);
+    await this.publisher.publishStart(order);
 
     await this.subscriber.subscribe(order);
 
-    await this.orderer.complete(order);
+    const result = await this.orderer.complete(order).catch((err: Error) => err);
+    if (result instanceof Error) {
+      const errorMsg = `failed complete order. reason: ${result.message}`;
+      console.error(result);
+      await this.publisher.publishCancel(order)
+      throw new HttpError(errorMsg, 500);
+    }
 
     res.send({ msg: 'ok' });
   };

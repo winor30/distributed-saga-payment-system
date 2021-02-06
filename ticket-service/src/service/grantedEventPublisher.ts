@@ -6,10 +6,14 @@ export class GrantedEventPublisher {
   constructor(private readonly pubsub: PubSubClient) {}
 
   publishGranted = (receivedData: PaymentEvent, history: TicketHistory) => {
-    return this.pubsub.publishEvent(receivedData, history, 'granted-ticket');
+    return this.pubsub.publishEvent('granted-ticket', receivedData, history);
   };
 
   publishCanceled = (receivedData: PaymentEvent, history: TicketHistory) => {
-    return this.pubsub.publishEvent(receivedData, history, 'canceled-ticket');
+    return this.pubsub.publishEvent('canceled-ticket', receivedData, history);
+  };
+
+  publishFailed = (receivedData: PaymentEvent) => {
+    return this.pubsub.publishEvent('failed-ticket', receivedData);
   };
 }

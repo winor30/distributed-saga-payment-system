@@ -25,6 +25,7 @@ export default class PointHandler {
     if (consumedResult instanceof Error) {
       const errorMsg = `failed consume point. reason: ${consumedResult.message}`;
       console.error(consumedResult);
+      await this.publisher.publishFailed(eventData);
       throw new HttpError(errorMsg, 500);
     }
 

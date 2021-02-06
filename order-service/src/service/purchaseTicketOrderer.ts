@@ -24,4 +24,8 @@ export class PurchaseTicketOrderer {
   complete = async (order: Order) => {
     await this.repository.update(order.complete());
   };
+
+  cancel = async (order: Order) => {
+    await this.repository.update(order.cancel());
+  };
 }
